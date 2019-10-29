@@ -64,7 +64,7 @@ def scrape_oldtimer_auction_results(links, filename='oldtimers.csv'):
         oldtimer = Oldtimer(link)
         oldtimers = oldtimers.append(oldtimer.return_dict(), ignore_index=True)
         if iteration % 100 == 0:
-            oldtimers.to_csv(filename)
+        oldtimers.to_csv(filename, index=False)
         iteration += 1
     return oldtimers
 

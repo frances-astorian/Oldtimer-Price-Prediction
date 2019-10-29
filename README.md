@@ -255,37 +255,32 @@ print(list(porsche_df.columns))
 
 ## Normalizing Price and Kilometers Driven
 
-Both the price, and Kilometers driven are not normally distributed. I apply a Box Cox transformation to normalize them, and improve the fit of the Linear Model.
+The number of kilometers driven is not normally distributed. I apply a Box Cox transformation to normalize it and to improve the fit of the Linear Model.
 
 
 ```python
-plt.rcParams["figure.figsize"] = (15,4)
-fig, ax = plt.subplots(1,2)
-sns.kdeplot(porsche_df.Price, ax=ax[0]);
-sns.kdeplot(porsche_df.Kilometers, ax=ax[1]);
+plt.rcParams["figure.figsize"] = (15,5)
+sns.kdeplot(porsche_df.Kilometers);
 ```
 
 
-![png](./images/output_22_0.png)
+![png](./images/kilometers.png)
 
 
 
 ```python
-#Create two Transformed Columns
-porsche_df["logprice"], price_lambda = boxcox(porsche_df["Price"])
+#Create Transformed Column
 porsche_df["logkilometers"], kilometers_lambda = boxcox(porsche_df["Kilometers"])
 ```
 
 
 ```python
 plt.rcParams["figure.figsize"] = (15,4)
-fig, ax =plt.subplots(1,2)
-sns.kdeplot(porsche_df.logprice, ax=ax[0]);
-sns.kdeplot(porsche_df.logkilometers, ax=ax[1]);
+sns.kdeplot(porsche_df.logkilometers);
 ```
 
 
-![png](./images/output_24_0.png)
+![png](./images/logkilometers.png)
 
 
 # Modeling
@@ -1232,7 +1227,6 @@ live_auction_details = pd.read_csv('live_auctions.csv').drop('Unnamed: 0', axis=
 ```python
 live_auction_details.head()
 ```
-
 
 
 <table border="1" class="dataframe">

@@ -1368,6 +1368,8 @@ porsche_lr = OLSResults.load("linear_model.pickle")
 ```python
 predictions = porsche_lr.get_prediction(live_porsche_auctions)
 predicted_price_range = predictions.summary_frame(alpha=0.1)[['mean_ci_lower', 'mean_ci_upper']]
+predicted_price_range = round(predicted_price_range, -2)
+predicted_price_range.columns = ['Lower Bound ($)', 'Upper Bound ($)']
 predicted_price_range.head()
 ```
 
@@ -1375,35 +1377,35 @@ predicted_price_range.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>mean_ci_lower</th>
-      <th>mean_ci_upper</th>
+      <th>Lower Price Bound ($)</th>
+      <th>Upper Price Bound ($)/th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>21678.866757</td>
-      <td>34795.203746</td>
+      <td>21700</td>
+      <td>34800</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>80551.411071</td>
-      <td>99734.933089</td>
+      <td>80600</td>
+      <td>99700</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>49507.659684</td>
-      <td>60216.272886</td>
+      <td>49500</td>
+      <td>60200</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>32562.072612</td>
-      <td>47933.813597</td>
+      <td>32600</td>
+      <td>47900</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>30254.437821</td>
-      <td>42738.345450</td>
+      <td>30200</td>
+      <td>42700</td>
     </tr>
   </tbody>
 </table>

@@ -168,21 +168,6 @@ len(oldtimer_df)
     8101
 
 
-
-
-```python
-# The oldest car in the Dataset was built in 1928
-oldtimer_df.Year.min()
-```
-
-
-
-
-    1098.0
-
-
-
-
 ```python
 # Drops rows with missing values, cars that aren't in working condition, etc.
 oldtimer_df = data_cleansing.cleanse_data(oldtimer_df)
@@ -230,16 +215,6 @@ porsche_df.Model.nunique()
 
 
     24
-
-
-
-
-```python
-model_dtype = pd.api.types.CategoricalDtype(categories=porsche_df.Model.unique(), ordered=True)
-pickle.dump(model_dtype, open('./categorical_dtypes/model.pickle', 'wb'))
-porsche_df['Model'] = porsche_df['Model'].astype(t)
-pd.get_dummies(porsche_df['Model'])
-```
 
 
 
@@ -335,7 +310,7 @@ As we build the model, we will be sure to make sure these assumptions have been 
 
 ```python
 X = porsche_df.drop(["Price", "Kilometers", "logprice", "Gearbox", "Year"], axis=1)
-y = porsche_df["logprice"]
+y = porsche_df["Price"]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 ```
@@ -1249,10 +1224,8 @@ live_auction_links = scrape_live_auction_links()
 # requires a fast internet connection
 live_auction_details = webscraper.scrape_oldtimer_auction_results(live_auction_links, "live_auctions.csv")
 ```
-
-
 ```python
-live_auction_details = pd.read_csv('live_auctions.csv')
+live_auction_details = pd.read_csv('live_auctions.csv').drop('Unnamed: 0', axis=1)
 ```
 
 
@@ -1260,11 +1233,27 @@ live_auction_details = pd.read_csv('live_auctions.csv')
 live_auction_details.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Unnamed: 0</th>
       <th>Lot Number</th>
       <th>Chassis Number</th>
       <th>Running Condition</th>
@@ -1282,83 +1271,78 @@ live_auction_details.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0</td>
-      <td>24412</td>
-      <td>WDBBA48D9KA096758</td>
+      <td>24516.0</td>
+      <td>WP0JB0928FS860129</td>
       <td>True</td>
-      <td>curtispopp7</td>
-      <td>Sacramento, California 95815</td>
-      <td>Mercedes-Benz R107 SL</td>
-      <td>1989.0</td>
-      <td>252000.0</td>
-      <td>5.5-Liter V8</td>
-      <td>Four-Speed Automatic Transmission</td>
+      <td>kjk928</td>
+      <td>Colden, New York 14033</td>
+      <td>Porsche 928</td>
+      <td>1985.0</td>
+      <td>120000.0</td>
+      <td>5.0L 32-Valve V8</td>
+      <td>5-Speed Manual Transaxle</td>
       <td>NaN</td>
-      <td>5750.0</td>
+      <td>9280.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1</td>
-      <td>24399</td>
-      <td>WBSKG9C52BE368856</td>
+      <td>24743.0</td>
+      <td>23894217</td>
       <td>True</td>
-      <td>eZCPeezy</td>
-      <td>Santa Barbara, California 93101</td>
-      <td>BMW E90/E92/E93 M3</td>
-      <td>2011.0</td>
-      <td>111000.0</td>
-      <td>4.0-Liter S65 V8</td>
-      <td>Six-Speed Manual Transmission</td>
+      <td>KimChillag</td>
+      <td>Columbia, South Carolina 29223</td>
       <td>NaN</td>
-      <td>20000.0</td>
+      <td>1956.0</td>
+      <td>74000.0</td>
+      <td>368ci V8</td>
+      <td>Refurbished 3-Speed Automatic Transmission</td>
+      <td>NaN</td>
+      <td>5000.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2</td>
-      <td>24308</td>
-      <td>143436</td>
+      <td>24528.0</td>
+      <td>1H57H2B646428</td>
       <td>True</td>
-      <td>huskyrider</td>
-      <td>Cave Creek, Arizona 85331</td>
+      <td>Dean_Laumbach</td>
+      <td>Neptune, New Jersey 07753</td>
       <td>NaN</td>
-      <td>1956.0</td>
+      <td>1972.0</td>
+      <td>125000.0</td>
+      <td>Overbored Replacement 350ci V8</td>
+      <td>Turbo 350 Automatic Transmission</td>
       <td>NaN</td>
-      <td>2-Stroke 125cc Single</td>
-      <td>4-Speed Transmission</td>
-      <td>NaN</td>
-      <td>1150.0</td>
+      <td>8500.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>3</td>
-      <td>24231</td>
-      <td>WP0CA2989XU631797</td>
+      <td>24639.0</td>
+      <td>304523</td>
       <td>True</td>
-      <td>greatdanems</td>
-      <td>Fort Lauderdale, Florida 33309</td>
-      <td>Porsche Boxster</td>
-      <td>1999.0</td>
-      <td>24000.0</td>
-      <td>2.5-Liter Flat-Six</td>
-      <td>Five-Speed Manual Transaxle</td>
+      <td>Bill_S1</td>
+      <td>Marshall, Virginia 20115</td>
+      <td>Porsche Longhood 911</td>
+      <td>1966.0</td>
+      <td>119000.0</td>
+      <td>Numbers-Matching 2.0L Flat-Six</td>
+      <td>Original Five-Speed Manual Transaxle</td>
       <td>NaN</td>
-      <td>11500.0</td>
+      <td>90000.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>4</td>
-      <td>24327</td>
-      <td>WP0AA2952HN151481</td>
+      <td>24530.0</td>
+      <td>JF1GD29662G527501</td>
       <td>True</td>
-      <td>Type911</td>
-      <td>Durango, Colorado 81301</td>
-      <td>Porsche 944 Turbo</td>
-      <td>1987.0</td>
-      <td>57000.0</td>
-      <td>Turbocharged 2.5L Inline-Four</td>
-      <td>Five-Speed Manual Transaxle</td>
+      <td>restodavid99</td>
+      <td>Carlsbad, California 92009</td>
       <td>NaN</td>
-      <td>22500.0</td>
+      <td>2002.0</td>
+      <td>16000.0</td>
+      <td>Turbocharged 2.0L Flat-Four</td>
+      <td>Five-Speed Manual Transmission</td>
+      <td>NaN</td>
+      <td>8250.0</td>
     </tr>
   </tbody>
 </table>
@@ -1385,71 +1369,10 @@ live_porsche_auctions = live_porsche_auctions.loc[live_porsche_auctions['Kilomet
 
 ```python
 live_porsche_auctions = feature_engineering.engineer_basic_features(live_porsche_auctions, live_auction=True)
-live_porsche_auctions = feature_engineering.engineer_engine_features(live_porsche_auctions)
+live_porsche_auctions = feature_engineering.engineer_engine_features(live_porsche_auctions, live_auction=True)
 ```
 
-
-```python
-live_porsche_auctions.head(1)
-```
-
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Kilometers</th>
-      <th>Intercept</th>
-      <th>Gearbox</th>
-      <th>Year</th>
-      <th>Porsche 912</th>
-      <th>Porsche 928</th>
-      <th>Porsche 930 Turbo</th>
-      <th>Porsche 944 Turbo</th>
-      <th>Porsche 964 911</th>
-      <th>Porsche 996 911</th>
-      <th>...</th>
-      <th>2.5L</th>
-      <th>3.2L</th>
-      <th>3.3L</th>
-      <th>3.6L</th>
-      <th>4.0L</th>
-      <th>4.5L</th>
-      <th>Flat Six</th>
-      <th>Flat Four</th>
-      <th>Inline Four</th>
-      <th>V8</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>3</th>
-      <td>24000</td>
-      <td>1</td>
-      <td>Five-Speed Manual Transaxle</td>
-      <td>1999</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-<p>1 rows × 36 columns</p>
-</div>
-
+    Loaded model, year sold, and decade built dtypes
 
 
 
@@ -1459,7 +1382,7 @@ live_porsche_auctions["logkilometers"], kilometers_lambda = boxcox(live_porsche_
 
 
 ```python
-live_porsche_auctions = live_porsche_auctions.drop(["Kilometers", "Gearbox"], axis=1)
+live_porsche_auctions = live_porsche_auctions.drop(["Kilometers", "Gearbox", "Year"], axis=1)
 ```
 
 
@@ -1471,6 +1394,60 @@ porsche_lr = OLSResults.load("linear_model.pickle")
 
 ```python
 predictions = porsche_lr.get_prediction(live_porsche_auctions)
-predicted_price_range = predictions.summary_frame(alpha=0.2)[['mean_ci_lower', 'mean_ci_upper']]
+predicted_price_range = predictions.summary_frame(alpha=0.1)[['mean_ci_lower', 'mean_ci_upper']]
 predicted_price_range.head()
 ```
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean_ci_lower</th>
+      <th>mean_ci_upper</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>21678.866757</td>
+      <td>34795.203746</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>80551.411071</td>
+      <td>99734.933089</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>49507.659684</td>
+      <td>60216.272886</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>32562.072612</td>
+      <td>47933.813597</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>30254.437821</td>
+      <td>42738.345450</td>
+    </tr>
+  </tbody>
+</table>
+</div>

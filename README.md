@@ -576,9 +576,6 @@ def show_residuals(column = widgets.IntSlider(min=1, max=58, step=1, value=58)):
 ```
 
 
-    interactive(children=(IntSlider(value=58, description='column', max=58, min=1), Output()), _dom_classes=('widg…
-
-
 ## 2. Correlation of Error Terms
 As there isn't a strong time-series component in auction data from various different cars, it's rather unlikely that the error terms are correlated. Moreover, the Durbin-Watson statistic, which tests for autocorrelation with lag 1, is not substantially less than 2 at 1.955
 

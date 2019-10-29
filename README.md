@@ -1235,21 +1235,6 @@ live_auction_details.head()
 
 
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1372,9 +1357,6 @@ live_porsche_auctions = feature_engineering.engineer_basic_features(live_porsche
 live_porsche_auctions = feature_engineering.engineer_engine_features(live_porsche_auctions, live_auction=True)
 ```
 
-    Loaded model, year sold, and decade built dtypes
-
-
 
 ```python
 live_porsche_auctions["logkilometers"], kilometers_lambda = boxcox(live_porsche_auctions["Kilometers"])
@@ -1398,22 +1380,6 @@ predicted_price_range = predictions.summary_frame(alpha=0.1)[['mean_ci_lower', '
 predicted_price_range.head()
 ```
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">

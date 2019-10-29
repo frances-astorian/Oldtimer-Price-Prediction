@@ -21,7 +21,7 @@ def engineer_basic_features(df, live_auction=False):
     else:
         df["Year Sold"] = datetime.datetime.now().year
 
-    if not os.exists('categorical_dtypes'):
+    if not os.path.exists('categorical_dtypes'):
         os.mkdir('categorical_dtypes')
 
     if live_auction == False:
@@ -37,6 +37,7 @@ def engineer_basic_features(df, live_auction=False):
         model_dtype = pickle.load(open('./categorical_dtypes/model.pickle', 'rb'))
         year_sold_dtype = pickle.load(open('./categorical_dtypes/year_sold.pickle', 'rb'))
         decade_built_dtype = pickle.load(open('./categorical_dtypes/decade_built.pickle', 'rb'))
+        print('Loaded model, year sold, and decade built dtypes')
 
     df['Model'] = df['Model'].astype(model_dtype)
     df['Year Sold'] = df['Year Sold'].astype(year_sold_dtype)
@@ -47,6 +48,7 @@ def engineer_basic_features(df, live_auction=False):
     decade_built = pd.get_dummies(df["Decade Built"], drop_first=True)
 
     df["Intercept"] = 1
+
     if live_auction == False:
         df = pd.concat((df[["Kilometers", "Engine", "Price", "Intercept", "Gearbox", "Year"]], make,
                         decade_built, year_sold), axis=1)
@@ -57,12 +59,13 @@ def engineer_basic_features(df, live_auction=False):
     return df
 
 
-def engineer_engine_features(df):
+def engineer_engine_features(df, live_auction=False):
     """
     Converts the Engine column into categorical features using regex.
 
     Args:
-        df: A Pandas Dataframe.
+        df: A DataFrame of BringATrailer Auction results
+        live_auction (bool):
     Returns:
         A Pandas DataFrame.
     """
@@ -78,12 +81,22 @@ def engineer_engine_features(df):
     df["Original Engine"] = df["Engine"].str.contains(r"Original|Numbers-Matching|Numbers Matching").astype(int)
 
     # create columns for engine displacement
-    for x in range(1, 5):
-        for x2 in range(0, 10):
-            engine_displacement = str(x) + "." + str(x2) + "L"
-            rows_with_engine_displacement = df["Engine"].str.contains(engine_displacement)
-            if rows_with_engine_displacement.any():
-                df[engine_displacement] = rows_with_engine_displacement.astype(int)
+    df["engine_displacement"] = df["Engine"].str.extract(r'([0-9].[0-9]L|[0-9].[0-9]-Liter)')[0]
+    repl = lambda r: r[0][0:3] + 'L'
+    df["engine_displacement"] = df["engine_displacement"].str.replace(r'[0-9].[0-9]-Liter', repl)
+    df['engine_displacement'] = df['engine_displacement'].fillna('Other')
+
+    if not live_auction:
+        engine_dtype = pd.api.types.CategoricalDtype(categories=df["engine_displacement"].unique(), ordered=True)
+        pickle.dump(engine_dtype, open('./categorical_dtypes/engine.pickle', 'wb'))
+
+    else:
+        engine_dtype = pickle.load(open('./categorical_dtypes/engine.pickle', 'rb'))
+
+    df['engine_displacement'] = df['engine_displacement'].astype(engine_dtype)
+
+    engine = pd.get_dummies(df['engine_displacement'], drop_first=True)
+    df = pd.concat([df, engine], axis=1)
 
     # Create columns depending on Engine type
     df["Flat Six"] = df["Engine"].str.contains(r"Flat-Six|Flat Six").astype(int)
@@ -91,7 +104,7 @@ def engineer_engine_features(df):
     df["Inline Four"] = df["Engine"].str.contains("Inline-Four").astype(int)
     df["V8"] = df["Engine"].str.contains("V8").astype(int)
 
-    df = df.drop("Engine", axis=1)
+    df = df.drop(["Engine", 'engine_displacement'], axis=1)
 
     return df
 

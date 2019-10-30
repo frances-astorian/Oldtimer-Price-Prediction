@@ -1,7 +1,7 @@
 ![png](./images/1961_356b_roadster.jpg)
 
 
-# Webscraping Data
+# Oldtimer Price Prediction using Auction Data
 
 Over the past few years, the online Auctioning site BringATrailer.com has hosted tens of thousands of auctions for used cars. Many of these cars are Oldtimers, i.e. thirty or more years old. While each auction page is created by the seller (and is anything but standardized), I created a Webscraper to scrape features that are relevant to the ultimate price of the car. These include kilometers driven, model, engine, and decade built. The Webscraper works in two steps
 
